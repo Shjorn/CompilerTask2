@@ -112,9 +112,10 @@ class Trace extends AST{
     }
     // A method to print all the values of a trace/Signal in the console
     public String toString(){
-        String message = "";
+        String message = signal;
         for(int i = 0; i < values.length; i++){
-            message += (signal + ": " + values[i]);
+            if(i != 0) message += ", ";
+            message += (values[i]);
         }
         message += "\n";
         return message;
