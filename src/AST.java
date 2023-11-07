@@ -26,12 +26,7 @@ class Conjunction extends Expr{
     // And
     @Override
     public boolean eval(Environment env){
-        if(e1.eval(env) == e2.eval(env)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return (e1.eval(env) == e2.eval(env));
     }
 }
 
@@ -41,12 +36,7 @@ class Disjunction extends Expr{
     // Or
     @Override
     public boolean eval(Environment env){
-        if(e1.eval(env) || e2.eval(env)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return (e1.eval(env) || e2.eval(env));
     }
 }
 
@@ -56,12 +46,7 @@ class Negation extends Expr{
     // !
     @Override
     public boolean eval(Environment env){
-        if(e.eval(env) == true){
-            return false;
-        }
-        else{
-            return true;
-        }
+        return !e.eval(env);
     }
 }
 
