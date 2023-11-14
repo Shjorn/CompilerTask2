@@ -215,9 +215,15 @@ class Circuit extends AST{
             originals.add(s);
         }
 
-
-
-
+        //all siminputs boolean arrays are of same length and not length 0.
+        int length = 0;
+        for(int i = 0; i < siminputs.size(); i++) {
+            //Make sure that siminputs exists in inputs and has a size greater than 0
+            if(siminputs.get(i).values.length == 0) error("Error: Siminput was empty\n");
+            //Make sure the lengths are the same
+            if(i == 0) length = siminputs.get(i).values.length;
+            else if (siminputs.get(i).values.length != length) error("Error: Simulation inputs are of different sizes");
+        }
 
 
     }
@@ -227,9 +233,6 @@ class Circuit extends AST{
         System.out.println("<br><br>Initializing <br>");
         errorChecking();
         for(int i = 0; i < siminputs.size(); i++) {
-            int isInMultiple = 0;
-            //Make sure that siminputs exists in inputs and has a size greater than 0
-            if(siminputs.get(i).values.length == 0) error("Error: Siminput was empty\n");
             env.setVariable(siminputs.get(i).signal, siminputs.get(i).values[0]);
         }
         // Initializing all latches with their build in method
