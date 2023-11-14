@@ -28,7 +28,7 @@ class Conjunction extends Expr{
     // And
     @Override
     public boolean eval(Environment env){
-        return (e1.eval(env) == e2.eval(env));
+        return(e1.eval(env) && e2.eval(env));
     }
 
     @Override
