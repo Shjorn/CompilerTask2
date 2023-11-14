@@ -117,7 +117,7 @@ class Trace extends AST{
             if(i != 0) message += ", ";
             message += (values[i]);
         }
-        message += "\n";
+        message += "<br>\n";
         return message;
     }
 }
@@ -165,6 +165,8 @@ class Circuit extends AST{
     }
     // Initialization
     public void initialize(Environment env){
+        //Tell we are initializing
+        System.out.println("Initializing <br>");
         // Initialize all inputs using siminputs
         for(int i = 0; i < siminputs.size(); i++) {
             //Make sure that siminputs exists in inputs and has a size greater than 0
@@ -197,6 +199,8 @@ class Circuit extends AST{
 
     // Running next cycle
     public void nextCycle(Environment env, int i){
+        //Tell what cycle it is
+        System.out.println("Running cycle "+ i +"<br>");
         // Initialize all inputs using siminputs
         for(int j = 0; j < siminputs.size(); j++){
             //Make sure that siminputs exists
@@ -236,6 +240,7 @@ class Circuit extends AST{
         for(int i = 1; i < times; i++){
             nextCycle(env, i);
         }
+        System.out.println("<br><br>");
     }
 }
 
