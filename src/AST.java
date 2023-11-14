@@ -112,13 +112,18 @@ class Trace extends AST{
     }
     // A method to print all the values of a trace/Signal in the console
     public String toString(){
-        String message = signal +": ";
+        String message = "";
         for(int i = 0; i < values.length; i++){
-            if(i != 0) message += ", ";
-            message += (values[i]);
+            message += boolToBinary(values[i]);
         }
-        message += "<br>\n";
+        message += " " + signal + "<br>";
         return message;
+    }
+
+    private String boolToBinary(Boolean bool){
+        if(bool == null) return "_";
+        if(bool) return "1";
+        else return "0";
     }
 }
 
@@ -165,9 +170,9 @@ class Circuit extends AST{
     }
     // Initialization
     public void initialize(Environment env){
-        //Tell we are initializing
-        System.out.println("Initializing <br>");
         // Initialize all inputs using siminputs
+        System.out.println("<br><br>Initializing <br>");
+
         for(int i = 0; i < siminputs.size(); i++) {
             //Make sure that siminputs exists in inputs and has a size greater than 0
             if (inputs.contains(siminputs.get(i).signal) && siminputs.get(i).values.length > 0) {
@@ -203,7 +208,7 @@ class Circuit extends AST{
     // Running next cycle
     public void nextCycle(Environment env, int i){
         //Tell what cycle it is
-        System.out.println("Running cycle "+ i +"<br>");
+        System.out.println("<br><br>Running cycle "+ i +"<br>");
         // Initialize all inputs using siminputs
         for(int j = 0; j < siminputs.size(); j++){
             //Make sure that siminputs exists
@@ -230,10 +235,10 @@ class Circuit extends AST{
 
         for(int j = 0; j < simoutputs.size(); j++){
             simoutputs.get(j).values[i] = env.getVariable(simoutputs.get(j).signal);
-            System.out.println(simoutputs.get(j).toString());
+            System.out.println(simoutputs.get(j));
         }
 
-        }
+    }
 
         // run simulation
     public void runSimulator(Environment env){
