@@ -18,6 +18,8 @@ public abstract class AST{
 
 abstract class Expr extends AST{
     public abstract boolean eval(Environment env);
+
+    public abstract void typeChecking(Environment env);
 }
 
 class Conjunction extends Expr{
@@ -27,6 +29,12 @@ class Conjunction extends Expr{
     @Override
     public boolean eval(Environment env){
         return (e1.eval(env) == e2.eval(env));
+    }
+
+    @Override
+    public void typeChecking(Environment env) {
+        e1.typeChecking(env);
+        e2.typeChecking(env);
     }
 }
 
@@ -38,6 +46,12 @@ class Disjunction extends Expr{
     public boolean eval(Environment env){
         return (e1.eval(env) || e2.eval(env));
     }
+
+    @Override
+    public void typeChecking(Environment env) {
+        e1.typeChecking(env);
+        e2.typeChecking(env);
+    }
 }
 
 class Negation extends Expr{
@@ -48,6 +62,11 @@ class Negation extends Expr{
     public boolean eval(Environment env){
         return !e.eval(env);
     }
+
+    @Override
+    public void typeChecking(Environment env) {
+        e.typeChecking(env);
+    }
 }
 
 class Signal extends Expr{
@@ -55,13 +74,20 @@ class Signal extends Expr{
     Signal(String varname){this.varname=varname;}
     @Override
     public boolean eval(Environment env){
-        if(env.hasVariable(varname) != null){
+        if(env.hasVariable(varname)){
             return env.getVariable(varname);
         }
         else{
             error("Error: "+ varname + " could not be found in environment.\n");
             // The return doesn't matter, but Java complains if there isn't one
             return false;
+        }
+    }
+
+    @Override
+    public void typeChecking(Environment env) {
+        if(!env.hasVariable(varname)){
+            error("Cyclical updates are not allowed. PROBLEM: " + varname);
         }
     }
 }
@@ -170,8 +196,9 @@ class Circuit extends AST{
     }
 
     public void errorChecking(){
-        ArrayList<String> originals = new ArrayList<>();
 
+        // Each signal is either input, latch or updates
+        ArrayList<String> originals = new ArrayList<>();
         for(int i = 0; i < inputs.size(); i++){
             String s = inputs.get(i);
             if(originals.contains(s)) error("Error: inputs, latches or updates already contains: " + s);
@@ -187,6 +214,12 @@ class Circuit extends AST{
             if(originals.contains(s)) error("Error: inputs, latches or updates already contains: " + s);
             originals.add(s);
         }
+
+
+
+
+
+
     }
     // Initialization
     public void initialize(Environment env){
@@ -205,6 +238,7 @@ class Circuit extends AST{
         }
         // run "eval" method of all update, to initialize remaining signals
         for(int i = 0; i < updates.size(); i++){
+            updates.get(i).e.typeChecking(env);
             updates.get(i).eval(env);
         }
         // print out environment
