@@ -190,11 +190,14 @@ class Circuit extends AST{
             for(int i = 0; i < siminputs.size(); i++){
                 System.out.println(siminputs.get(i).toString());
             }
-            /*
-            for(int i = 0; i < simoutputs.size(); i++){
+
+            for(int i = 0; i < outputs.size(); i++){
+                Boolean a[] = new Boolean[simlength];
+                a[0]=env.getVariable(outputs.get(i));
+                simoutputs.add(new Trace(outputs.get(i), a));
                 System.out.println(simoutputs.get(i).toString());
             }
-             */
+
     }
 
     // Running next cycle
@@ -224,20 +227,22 @@ class Circuit extends AST{
         for(int j = 0; j < siminputs.size(); j++){
             System.out.println(siminputs.get(j).toString());
         }
-        /*
+
         for(int j = 0; j < simoutputs.size(); j++){
+            simoutputs.get(j).values[i] = env.getVariable(simoutputs.get(j).signal);
             System.out.println(simoutputs.get(j).toString());
         }
-        */
+
         }
 
         // run simulation
     public void runSimulator(Environment env){
         System.err.println("Do we start in AST?\n");
+        simlength = siminputs.get(0).values.length;
+        simoutputs = new ArrayList<>();
         initialize(env);
-        int times = siminputs.get(0).values.length;
-        //int times = 1;
-        for(int i = 1; i < times; i++){
+        //int simlength = 1;
+        for(int i = 1; i < simlength; i++){
             nextCycle(env, i);
         }
         System.out.println("<br><br>");
