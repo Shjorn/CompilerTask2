@@ -168,40 +168,56 @@ class Circuit extends AST{
 	this.updates=updates;
 	this.siminputs=siminputs;
     }
+
+    public void errorChecking(){
+        ArrayList<String> originals = new ArrayList<>();
+
+        for(int i = 0; i < inputs.size(); i++){
+            String s = inputs.get(i);
+            if(originals.contains(s)) error("Error: inputs, latches or updates already contains: " + s);
+            originals.add(s);
+        }
+        for(int i = 0; i < latches.size(); i++){
+            String s = latches.get(i).outputname;
+            if(originals.contains(s)) error("Error: inputs, latches or updates already contains: " + s);
+            originals.add(s);
+        }
+        for(int i = 0; i < updates.size(); i++){
+            String s = updates.get(i).name;
+            if(originals.contains(s)) error("Error: inputs, latches or updates already contains: " + s);
+            originals.add(s);
+        }
+    }
     // Initialization
     public void initialize(Environment env){
         // Initialize all inputs using siminputs
         System.out.println("<br><br>Initializing <br>");
-
+        errorChecking();
         for(int i = 0; i < siminputs.size(); i++) {
+            int isInMultiple = 0;
             //Make sure that siminputs exists in inputs and has a size greater than 0
-            if (inputs.contains(siminputs.get(i).signal) && siminputs.get(i).values.length > 0) {
-                env.setVariable(siminputs.get(i).signal, siminputs.get(i).values[0]);
-            }
-            // else we terminate
-            else {
-                error("Error: Siminput was size 0 or was not amongst inputs.\n");
-            }
+            if(siminputs.get(i).values.length == 0) error("Error: Siminput was empty\n");
+            env.setVariable(siminputs.get(i).signal, siminputs.get(i).values[0]);
         }
-            // Initializing all latches with their build in method
-            for(int i = 0; i < latches.size(); i++){
-                latches.get(i).initialize(env);
-            }
-            // run "eval" method of all update, to initialize remaining signals
-            for(int i = 0; i < updates.size(); i++){
-                updates.get(i).eval(env);
-            }
-            // print out environment
-            for(int i = 0; i < siminputs.size(); i++){
-                System.out.println(siminputs.get(i).toString());
-            }
+        // Initializing all latches with their build in method
+        for(int i = 0; i < latches.size(); i++){
+            latches.get(i).initialize(env);
+        }
+        // run "eval" method of all update, to initialize remaining signals
+        for(int i = 0; i < updates.size(); i++){
+            updates.get(i).eval(env);
+        }
+        // print out environment
+        for(int i = 0; i < siminputs.size(); i++){
+            System.out.println(siminputs.get(i).toString());
+        }
 
-            for(int i = 0; i < outputs.size(); i++){
-                Boolean a[] = new Boolean[simlength];
-                a[0]=env.getVariable(outputs.get(i));
-                simoutputs.add(new Trace(outputs.get(i), a));
-                System.out.println(simoutputs.get(i).toString());
-            }
+        for(int i = 0; i < outputs.size(); i++){
+            Boolean a[] = new Boolean[simlength];
+            a[0]=env.getVariable(outputs.get(i));
+            simoutputs.add(new Trace(outputs.get(i), a));
+            System.out.println(simoutputs.get(i).toString());
+        }
 
     }
 
