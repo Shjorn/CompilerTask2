@@ -219,6 +219,7 @@ class Circuit extends AST{
         int length = 0;
         for(int i = 0; i < siminputs.size(); i++) {
             //Make sure that siminputs exists in inputs and has a size greater than 0
+            System.err.println("siminput " + i + "has length: " + siminputs.get(i).values.length + "\n");
             if(siminputs.get(i).values.length == 0) error("Error: Siminput was empty\n");
             //Make sure the lengths are the same
             if(i == 0) length = siminputs.get(i).values.length;
@@ -233,6 +234,7 @@ class Circuit extends AST{
         System.out.println("<br><br>Initializing <br>");
         errorChecking();
         for(int i = 0; i < siminputs.size(); i++) {
+            if(!inputs.contains(siminputs.get(i).signal)){error("Don't recognize siminputs: " + siminputs.get(i).signal);}
             env.setVariable(siminputs.get(i).signal, siminputs.get(i).values[0]);
         }
         // Initializing all latches with their build in method
