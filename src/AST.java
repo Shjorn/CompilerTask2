@@ -87,7 +87,7 @@ class Signal extends Expr{
     @Override
     public void typeChecking(Environment env) {
         if(!env.hasVariable(varname)){
-            error("Cyclical updates are not allowed. PROBLEM: " + varname);
+            error("Cyclical updates are not allowed error or not defined error. PROBLEM: " + varname);
         }
     }
 }
@@ -214,6 +214,8 @@ class Circuit extends AST{
             if(originals.contains(s)) error("Error: inputs, latches or updates already contains: " + s);
             originals.add(s);
         }
+
+
 
         //all siminputs boolean arrays are of same length and not length 0.
         int length = 0;
