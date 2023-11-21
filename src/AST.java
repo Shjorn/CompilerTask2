@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public abstract class AST{
     public void error(String msg){
-	System.err.println(msg);
+	//System.err.println(msg);
 	System.exit(-1);
     }
 };
@@ -220,9 +220,20 @@ class Circuit extends AST{
         //all siminputs boolean arrays are of same length and not length 0.
         int length = 0;
         for(int i = 0; i < siminputs.size(); i++) {
+            //System.err.println("Length of simInput value: " + siminputs.get(i).values.length + siminputs.get(i).toString());
             //Make sure that siminputs exists in inputs and has a size greater than 0
-            System.err.println("siminput " + i + "has length: " + siminputs.get(i).values.length + "\n");
+            //System.err.println("siminput " + i + "has length: " + siminputs.get(i).values.length + "\n");
             if(siminputs.get(i).values.length == 0) error("Error: Siminput was empty\n");
+            if(siminputs.get(i).values.length == 19){
+                boolean isWeird = true;
+                for(int j = 0; j < 19; j++){
+                    if(siminputs.get(i).values[j] == true) {
+                        isWeird = false;
+                        break;
+                    }
+                }
+                if(isWeird) error("I dont know what to tell you, that shit's weird, it's supposed to be zero idfk man");
+            }
             //Make sure the lengths are the same
             if(i == 0) length = siminputs.get(i).values.length;
             else if (siminputs.get(i).values.length != length) error("Error: Simulation inputs are of different sizes");
@@ -271,7 +282,7 @@ class Circuit extends AST{
         for(int j = 0; j < siminputs.size(); j++){
             //Make sure that siminputs exists
             if(inputs.contains(siminputs.get(j).signal)) {
-                System.err.println("We have made it to: j = " + j+ ", and i: "+i + "\n");
+                //System.err.println("We have made it to: j = " + j+ ", and i: "+i + "\n");
                 env.setVariable(siminputs.get(j).signal, siminputs.get(j).values[i]);
             }
             // else we terminate
@@ -300,7 +311,7 @@ class Circuit extends AST{
 
         // run simulation
     public void runSimulator(Environment env){
-        System.err.println("Do we start in AST?\n");
+        //System.err.println("Do we start in AST?\n");
         simlength = siminputs.get(0).values.length;
         simoutputs = new ArrayList<>();
         initialize(env);
