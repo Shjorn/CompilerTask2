@@ -234,7 +234,8 @@ class Circuit extends AST{
         System.out.println("<br><br>Initializing <br>");
         errorChecking();
         for(int i = 0; i < siminputs.size(); i++) {
-            if(!inputs.contains(siminputs.get(i).signal)){error("Don't recognize siminputs: " + siminputs.get(i).signal);}
+            if(!inputs.contains(siminputs.get(i).signal))
+            {error("Don't recognize siminputs: " + siminputs.get(i).signal);}
             env.setVariable(siminputs.get(i).signal, siminputs.get(i).values[0]);
         }
         // Initializing all latches with their build in method
