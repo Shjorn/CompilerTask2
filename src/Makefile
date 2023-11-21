@@ -5,6 +5,7 @@
 
 classpathoption =   # nothing if already installed
 
+
 antlr4 = java $(classpathoption) org.antlr.v4.Tool
 grun   = java $(classpathoption) org.antlr.v4.gui.TestRig
 SRCFILES  = main.java Environment.java AST.java
@@ -18,25 +19,14 @@ hwLexer.java:	hw.g4
 
 main.class:	$(SRCFILES) $(GENERATED)
 	javac $(classpathoption) $(SRCFILES) $(GENERATED) 
-# newly added
-test:	a.out
-	./a.out
 
 run:	main.class
 	java $(classpathoption) main 01-hello-world.hw  > 01.html
 	java $(classpathoption) main 02-trafiklys-minimal.hw  > 02.html
 	java $(classpathoption) main 03-trafiklys.hw  > 03.html
 	java $(classpathoption) main 04-von-Neumann.hw  > 04.html
-	java $(classpathoption) AST 01-hello-world.hw
 
-# New
-compiler_output.ll:	main.class compiler_input.txt
-	java $(classpathoption) main compiler_input.txt > compiler_output.ll
-# New
-a.out:	compiler_output.ll
-	clang -O3 compiler_output.ll
-
- grun:	hwLexer.class hwParser.class 01-hello-world.hw
+grun:	hwLexer.class hwParser.class 01-hello-world.hw
 	$(grun) impl start -gui -tokens 01-hello-world.hw
 
 clean:
